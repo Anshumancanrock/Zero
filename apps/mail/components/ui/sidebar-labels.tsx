@@ -3,6 +3,7 @@ import { useActiveConnection } from '@/hooks/use-connections';
 import { RecursiveFolder } from './recursive-folder';
 import { useStats } from '@/hooks/use-stats';
 import { Tree } from '../magicui/file-tree';
+import { ScrollArea } from './scroll-area';
 import { useCallback } from 'react';
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 const SidebarLabels = ({ data }: Props) => {
   const { data: stats } = useStats();
   const { data: activeAccount } = useActiveConnection();
+
   const getLabelCount = useCallback(
     (labelName: string | undefined): number => {
       if (!stats || !labelName) return 0;
@@ -23,10 +25,10 @@ const SidebarLabels = ({ data }: Props) => {
   );
 
   return (
-    <div className="mr-0 flex-1 pr-0">
-      <div className="no-scrollbar relative -m-2 flex-1 overflow-auto bg-transparent">
-        <Tree className="rounded-md bg-transparent">
-          {(() => {
+    <div className="flex-1">
+      <ScrollArea className="h-full">
+        <div className="px-1">
+          <Tree className="rounded-md bg-transparent">{(() => {
             if (!data) return null;
             const isMicrosoftAccount = activeAccount?.providerId === 'microsoft';
             if (isMicrosoftAccount) {
@@ -153,8 +155,9 @@ const SidebarLabels = ({ data }: Props) => {
 
             return components;
           })()}
-        </Tree>
-      </div>
+          </Tree>
+        </div>
+      </ScrollArea>
     </div>
   );
 };
